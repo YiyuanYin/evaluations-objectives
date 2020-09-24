@@ -5,3 +5,7 @@
   border-radius: 50%;
   background-color: #FFF88F;
 }
+
+.player[data-opponent='true'] {
+  background-color: greenyellow;
+}

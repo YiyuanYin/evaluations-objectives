@@ -14,7 +14,6 @@ export function Room () {
 
   const onClickJoin = () => {
     if (Number.isInteger(Number(roomId))) {
-    socket.emit('join', roomId)
     history.replace(`${roomId}`)
     } else {
       alert('Please input an integer')
