@@ -23,7 +23,7 @@ export function Room () {
   return (
     <div>
       <input type='text' value={ roomId } onChange={ onChangeRoomId } />
-      <div className='button' onClick={ onClickJoin }>JOIN</div>
+      <div className='button' onClick={ onClickJoin }>Create</div>
     </div>
   )
 }

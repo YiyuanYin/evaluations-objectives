@@ -20,10 +20,10 @@ export const GameContextProvider = (props) => {
   const [socket, setSocket] = useState(null)
   const [roomId, setRoomId] = useState('')
   const [joinedIds, setJoinedIds] = useState([])
-  const [paths, setPaths] = useState([])
+  // const [paths, setPaths] = useState([])
   const [coordArr, setCoordArr] = useState([])
   // const [winnerIds, setWinnerIds] = useState([])
-  const [shouldReset, setShouldReset] = useState(false)
+  const [shouldReset, setShouldReset] = useState(true)
 
   const isFirstPlayer = useMemo(() => {
     if (joinedIds.length >= 2 && socket) {
@@ -56,7 +56,6 @@ export const GameContextProvider = (props) => {
 
   const reset = useCallback(() => {
     setCoordArr([])
-    // initCoord()
   }, [])
 
   // init socket
@@ -70,18 +69,16 @@ export const GameContextProvider = (props) => {
 
   useEffect(() => {
     if (!socket) return
-    if (joinedIds.length === 2 && (
-      coordArr.length === 0 ||
-      (coordArr.length === 1 && coordArr[0].id !== socket.id)
-    )) {
+    console.log(shouldReset)
+    if (joinedIds.length === 2 && shouldReset) {
       console.log('init')
       initCoord()
     }
   }, [
     joinedIds,
     initCoord,
-    coordArr,
     socket,
+    shouldReset,
   ])
 
   // handle keyboard event
@@ -129,12 +126,15 @@ export const GameContextProvider = (props) => {
           default:
         }
   
-        const isNextCoordInPath = paths.findIndex((path) => {
-          return path[0] === nextX && path[1] === nextY
+        const isNextCoordInPath = coordArr.findIndex((coordMsg) => {
+          return (
+            socket.id === coordMsg.id &&
+            isEqual([nextX, nextY], coordMsg.coord)
+          ) 
         }) >= 0
   
         if (isNextCoordInPath) {
-          alert('You can not undo your moves!')
+          console.log('You can not undo your moves!')
         }
   
         if (
@@ -144,9 +144,6 @@ export const GameContextProvider = (props) => {
           nextX >= 0 &&
           nextY >= 0
         ) {
-          setPaths(paths.concat([[nextX, nextY]]))
-          // currentX !== nextX && setCurrentX(nextX)
-          // currentY !== nextY && setCurrentY(nextY)
         !shouldReset && socket.emit('move', {
           id: socket.id,
           roomId: roomId,
@@ -158,7 +155,7 @@ export const GameContextProvider = (props) => {
     window.addEventListener('keydown', keydownHandler)
 
     return () => window.removeEventListener('keydown', keydownHandler)
-  }, [paths, roomId, socket, isSecondPlayer, isFirstPlayer, coordArr, shouldReset])
+  }, [roomId, socket, isSecondPlayer, isFirstPlayer, coordArr, shouldReset])
 
   // register socket event
   useEffect(() => {
@@ -178,19 +175,27 @@ export const GameContextProvider = (props) => {
     if (!socket) return
     socket.once('move', (msg) => {
       const { coord, id } = msg
-      console.log(coordArr)
+      setShouldReset(false)
+      console.log('coordArr',coordArr)
       console.log('move', msg, socket.id)
-      if (
-        coordArr.length > 2 &&
-        isEqual(coord, coordArr[coordArr.length - 1].coord)
-      ) {
-        // console.log('move', msg, socket.id)
-        console.log('winner', { id, roomId })
-        socket.emit('winner', { id, roomId })
-      } else {
-        setCoordArr([...coordArr, msg])
+      if (coordArr.findIndex((coordMsg) => {
+          return (
+            msg.id === coordMsg.id &&
+            isEqual(msg.coord, coordMsg.coord)
+          ) 
+        }) === -1) {
+          setCoordArr([...coordArr, msg])
+        }
+
+        if (
+          coordArr.length > 2 &&
+          isEqual(coord, coordArr[coordArr.length - 1].coord)
+        ) {
+          console.log('winner', { id, roomId })
+          socket.emit('winner', { id, roomId })
+        }
       }
-    })
+    )
   }, [socket, coordArr, roomId])
 
   useEffect(() => {
@@ -198,10 +203,13 @@ export const GameContextProvider = (props) => {
     socket.once('winner', (id) => {
       console.log('receive winner')
       setShouldReset(true)
-      // setWinnerIds([...winnerIds, id])
-      if (id === socket.id) {
-        reset()
+      setCoordArr([])
+      if (socket.id === id) {
+        alert('You win this round')
+      } else {
+        alert('Your opponent win this round')
       }
+      // setWinnerIds([...winnerIds, id])
     })
   }, [socket, reset])
 
