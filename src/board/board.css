@@ -1,14 +1,7 @@
 .board {
-  /* margin: 20px; */
-  height: 100%;
   width: 100%;
   position: relative;
   background: #D2D4FB;
-}
-
-.canvas {
-  height: 100%;
-  width: 100%;
 }
 
 .grid-line-x {

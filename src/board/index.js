@@ -1,10 +1,13 @@
 import React, { useEffect, useRef } from 'react'
-import { X_TILE_NUMBERS, Y_TILE_NUMBERS, TILE_WIDTH } from '../constant'
+import { X_TILE_NUMBERS, Y_TILE_NUMBERS, TILE_WIDTH, LINE_WIDTH } from '../constant'
+import { Player } from '../player'
 import './board.css'
 
 
 export const Board = () => {
   const boardRef = useRef(null)
+  const width = X_TILE_NUMBERS * TILE_WIDTH + (X_TILE_NUMBERS - 1) * LINE_WIDTH
+  const height = Y_TILE_NUMBERS * TILE_WIDTH + (Y_TILE_NUMBERS - 1) * LINE_WIDTH
   useEffect(() => {
     if (boardRef && boardRef.current)  {
       console.log(X_TILE_NUMBERS)
@@ -25,8 +28,13 @@ export const Board = () => {
     }
   }, [])
 
+  const style = {
+    width, height
+  }
+
   return (
-    <div className='board' ref={ boardRef }>
+    <div className='board' ref={ boardRef } style={ style }>
+      <Player />
     </div>
   )
 }
