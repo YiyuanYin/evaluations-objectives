@@ -60,7 +60,7 @@ export const GameContextProvider = (props) => {
 
   // init socket
   useEffect(() => {
-    const socket = ioClient('http://192.168.1.9:3000')
+    const socket = ioClient('http://localhost:3001')
     socket.on('connect', () => {
       setSocket(socket)
     })
