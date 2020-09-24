@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { GameContext } from './context'
 
 export function Room () {
-  const { socket, roomId, setRoomId } = useContext(GameContext)
+  const { roomId, setRoomId } = useContext(GameContext)
   const history = useHistory()
   
 
@@ -27,35 +27,3 @@ export function Room () {
     </div>
   )
 }
-
-// export class Room extends React.Component {
-//   constructor (props) {
-//     super()
-//     this.socket = ioClient('http://192.168.1.9:3000')
-//     this.state = {
-//       roomId: null
-//     }
-//   }
-
-//   componentDidMount () {
-//     this.socket.on('connect', () => {
-//       this.socket.on('opponent move', (message) => {
-//         const { coord }= message
-//       })
-
-//       this.socket.on('joined', () => {
-//         console.log('joined successfully')
-//       })
-//     })
-//   }
-
-//   onChangeRoomId 
-
-//   onClickJoin = () => {
-    
-//   }
-
-//   render () {
-
-//   }
-// }

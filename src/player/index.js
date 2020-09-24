@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState, useMemo, useContext } from 'react'
-import { TILE_WIDTH, X_TILE_NUMBERS, Y_TILE_NUMBERS } from '../constant'
+import React, { useMemo, useContext } from 'react'
+import { TILE_WIDTH } from '../constant'
 import { GameContext } from '../context'
 import './player.css'
 

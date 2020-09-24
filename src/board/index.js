@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from 'react'
+import React, { useEffect, useRef, useContext } from 'react'
 import { X_TILE_NUMBERS, Y_TILE_NUMBERS, TILE_WIDTH, LINE_WIDTH } from '../constant'
 import { Player } from '../player'
 import { GameContext } from '../context'
@@ -7,8 +7,7 @@ import './board.css'
 
 export const Board = () => {
   const boardRef = useRef(null)
-  const { socket, roomId, coord1, coord2, isFirstPlayer, joinedIds } = useContext(GameContext)
-  console.log('isFirstPlayer', isFirstPlayer)
+  const { coord1, coord2 } = useContext(GameContext)
 
   const width = X_TILE_NUMBERS * TILE_WIDTH + (X_TILE_NUMBERS - 1) * LINE_WIDTH
   const height = Y_TILE_NUMBERS * TILE_WIDTH + (Y_TILE_NUMBERS - 1) * LINE_WIDTH
